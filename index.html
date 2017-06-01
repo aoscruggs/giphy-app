@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Giphy Game</title>
+	<link rel="stylesheet" type="text/css" href="css/reset.css">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+<link rel="stylesheet" type="text/css" href="css/stylesheet.css">
+	<!--jquery-->
+	<script src="https://code.jquery.com/jquery.js"></script>
+</head>
+
+<body>
+<div class="container">
+	<div class="jumbotron text-center">
+		<h1>Eat Your Vegetables</h1>
+		<h2> Every one needs vegetables. Click a button to see gifs of your favorites</h2>
+	</div>
+		<div class="row">
+			<div class=col-md-9>
+				<div class="btn-group btn-group-lg" role="group" id="topics"></div>
+				</div>
+				<div class=col-md-3>
+					<form id="veggieForm">
+					<label for="veggie input">Add your favorite veggie</label>
+					<input type="text" id="veggieInput" value ="">
+					<br>
+					<input id="addVeggie" type="submit" value="Submit">
+					</form>
+				</div>
+				<div id="veggies-appear-here"></div>
+			</div>
+		</div>
+	</div>
+<script>
+	var veggies = ["tomato", "beans", "onions", "broccoli", "cauliflower"]
+
+	
+	for (var i = 0; i < veggies.length; i++) {
+		veggies[i]
+		var veggieButton = document.createElement("BUTTON");
+		var veggieName = document.createTextNode(veggies[i]);
+		veggieButton.appendChild(veggieName);
+		document.getElementById("topics").appendChild(veggieButton);
+	}
+
+	$("#addVeggie").on("click", function(){
+			event.preventDefault();
+  			var newVeggies = document.getElementById("veggieInput").value;
+		
+  			alert( JSON.stringify(newVeggies));
+  	
+			
+		});
+	function validate(){
+		
+	}
+
+	// the user has to click a button. So create a function 
+		$("BUTTON").on("click", function(){
+			var title = $(this).text();
+
+			var queryURL = "http://api.giphy.com/v1/gifs/search?q=" + title + "&limit=10&r=JSON&api_key=dc6zaTOxFJmzC";
+
+			
+// the button has to use ajax to get the information from giphy
+			$.ajax({
+		      url: queryURL,
+		      method: "GET"
+      		})
+			.done(function(response){
+
+				var results = response.data;
+
+				for (var i = 0; i<results.length; i++){
+
+					var gifDiv = $("<div class = 'item'>");
+
+					var rating = results[i].rating
+					
+					
+					var p = $("<p>").text("Rating: " + rating);
+
+					var veggieImage = $("<img>");
+
+					veggieImage.attr("src", results[i].images.fixed_height.url);
+
+					gifDiv.prepend(p);
+					gifDiv.prepend(veggieImage);
+
+					$("#veggies-appear-here").prepend(gifDiv);
+
+
+				}
+
+			});
+		
+
+			console.log("You like " + title);
+
+			
+		});
+
+	
+	
+
+	// giphy has to respond with 10 gifs related to the topic(use the limit attribute)
+
+	// I have to create a div to hold the output
+	//The output from the buttons have to be appended to the output div
+	//since the buttons were created dynamically, there is no id
+
+	// when the user clicks the image, it has to animate
+	
+
+
+
+</script>
+	
+</body>
+</html>
